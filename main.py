@@ -5,6 +5,7 @@ from player import Player
 from asteroids import Asteroid
 from asteroidfield import AsteroidField
 import sys
+from shot import Shot
 def main():
     print(f"Starting Asteroids")
     print(f"Screen width: {1280} \nScreen height: {SCREEN_HEIGHT}")
@@ -25,8 +26,8 @@ def main():
     Asteroid.containers = (asteroids,updatable,drawable)
     Player.containers = (updatable,drawable)
     AsteroidField.containers = (updatable)
-    shots.containers = (shots,updatable,drawable)
-    
+    Shot.containers = (shots,updatable,drawable)
+
     asteroid_field = AsteroidField()
     player = Player(x,y)
     while True:
@@ -50,6 +51,13 @@ def main():
                 log_event("player_hit")
                 print("Game Over!")
                 sys.exit()
+
+        for obj in asteroids:
+            for bullet in shots:
+                if obj.collides_with(bullet):
+                    log_event("asteroid_shot")
+                    obj.split()
+                    bullet.kill()
 
         dt = clock.tick(60)/1000
 
